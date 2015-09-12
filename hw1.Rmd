@@ -1,6 +1,7 @@
 Homework 1 - Eclectic Eagle Scouts
 ========================================================
-#test data#
+```{r}
+##test data##
 graph1 = list(A = list(edges   = c(2L),
                        weights = c(1 )),
               B = list(edges   = c(3L),
@@ -25,37 +26,40 @@ graph2 = list(A = list(edges   = c(2L),
               N = list(edges   = c(1L,2L,4L),
                        weights = c(33,22,11))
              )
+```
 
-#1. Function - is_valid
+```{r}
+##1. Function - is_valid
 is_valid <- function(g){
   count <- 0
-#Check if there are names for the primary list that they are all unique
+##Check if there are names for the primary list that they are all unique
 primary <- names(g)
 if (sum(duplicated(primary)) != 0){count=count+1}
 for (i in 1 : length(g)){
-#Check that object is a list of lists
+##Check that object is a list of lists
   if (typeof(g[[i]])!="list") {count=count+1}
-#Check that each secondary list contains only edges and weights vectors 
+##Check that each secondary list contains only edges and weights vectors 
   if (length(g[[i]])!=2) {count=count+1}
   if (names(g[[i]])[1]!="edges") {count=count+1}
   if (names(g[[i]])[2]!="weights") {count=count+1}
-#Check that edges and weights vectors that are of the appropriate type
+##Check that edges and weights vectors that are of the appropriate type
   if (!is.null(g[[i]][[1]])){
      if (!is.vector(g[[i]][[1]])) {count=count+1}
     if (!is.integer(g[[i]][[1]])) {count=count+1}
     if (min(g[[i]][[1]]) <= 0) {count=count+1}
     if (!is.numeric(g[[i]][[2]])) {count=count+1}
-#Check that there are not any edges to non-existent vertices
+##Check that there are not any edges to non-existent vertices
   if (max(g[[i]][[1]])>length(g))  {count=count+1}
-#Check that all weights are not less than or equal to 0
+##Check that all weights are not less than or equal to 0
   if (min(g[[i]][[2]])<=0) {count=count+1}
-#Check that every edge has a weight
+##Check that every edge has a weight
   if (length(g[[i]][[1]]) != length(g[[i]][[2]])){count=count+1}
 }
 }
-#As long as "count" is not equal to zero, there must be a mistake somewhere
+##As long as "count" is not equal to zero, there must be a mistake somewhere
 if (count == 0) {print ("TRUE")}
   else {print("FALSE")}
 }
 is_valid(graph1)
 is_valid(graph2)
+```
