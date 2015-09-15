@@ -120,6 +120,14 @@ graph18 = list(list(edges=c(2L,3L,4L,5L), weights=c(14,5,43,33)),
                list(edges=c(1L,2L,5L), weights=c(43,13,11)),
                list(edges=c(1L,2L,4L), weights=c(33,22,11))
               )
+graphX = list(A = list(edges=c(2L), weights=c(1)),
+              B = list(edges=c(3L), weights=c(1)),
+              C = list(edges=c(5L), weights=c(1)),
+              D = list(edges=c(2L,7L), weights=c(1,1)),
+              E = list(edges=c(4L,6L), weights=c(1,1)),
+              F = list(edges=c(), weights=c()),
+              X = list(edges=c(), weights=c())
+             ) two null vertices, both connected
 
 
 
@@ -160,21 +168,51 @@ randomGraph = function(length, maxWeight=10, seed=NULL) {
 ######################################################################################################
 # Input - g, a graph object.
 #
-# Output - adjacency, an adjacency matrix labeled with vertex names.
+# Output - a, an adjacency matrix labeled with vertex names.
 #
 # Description - Constructs adjacency matrix from graph object, with vertices as dimnames.
 
 adjacencyMatrix = function(g) {
-  adjacency = matrix(0, nrow=length(g), ncol=length(g))
-  adjDF = as.data.frame(adjacency)
+  a = matrix(0, nrow=length(g), ncol=length(g))
+  adjDF = as.data.frame(a)
   rownames(adjDF) = colnames(adjDF) = names(g)
   childNodes = lapply(g, function(x) { names(g)[x$edges] } )
   edgeWeights = lapply(g, function(x) { x$weights } )
   for(i in seq(length(g))) {
-    adjacency[i, match(unlist(childNodes[i]), colnames(adjDF))] = unlist(edgeWeights[match(names(g)[i], colnames(adjDF))])
+    a[i, match(unlist(childNodes[i]), colnames(adjDF))] = unlist(edgeWeights[match(names(g)[i], colnames(adjDF))])
   }
-  dimnames(adjacency) = list(names(g), names(g))
-  return(adjacency)
+  dimnames(a) = list(names(g), names(g))
+  return(a)
+}
+
+
+# listGraph()
+######################################################################################################
+# Input - adjacency, an adjacency matrix labeled with vertex names.
+#
+# Output - g, a graph object.
+#
+# Description - Constructs list-based graph object from adjacency matrix, with dimnames 
+#               as vertex labels.
+
+listGraph = function(a, labels=F) {
+  rowToList = function(row, Labels=labels) { 
+    if(Labels==T) { 
+      out = list(edges=names(row)[(row>0)], weights=unname(row[(row>0)]))
+    } else {
+      out = list(edges=seq(ncol(a))[(row>0)], weights=unname(row[(row>0)]))
+    }
+    return(out)       
+  }
+  g = apply(a, 1, rowToList)
+  makeNull = seq(ncol(a))[(rowSums(a)==0 & colSums(a)>0)]
+  if(length(makeNull)>0) {
+    g[makeNull] = list(list(edges=NULL, weights=NULL))
+  }
+  if(is.null(dimnames(a)[[1]])) {
+    names(g) = NULL
+  }
+  return(g)
 }
 
 
