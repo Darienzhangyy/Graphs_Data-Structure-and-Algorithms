@@ -6,7 +6,6 @@ Homework 1 - Eclectic Eagle Scouts
 
 ```{r, echo=F}
 source('graph.R')
-set.seed(1234)
 ```
 
 ## Auxiliary functions
@@ -76,7 +75,7 @@ If all of these conditions are met, ```is_valid()``` returns ```TRUE```; otherwi
 is_valid(graph1)                     # valid graph
 is_valid(graph2)                     # valid graph
 
-b = randomGraph(1000)$graph
+b = randomGraph(1000, seed=31415)$graph
 is_valid(b)
 system.time(is_valid(b))
 ```
@@ -100,7 +99,7 @@ is_isomorphic(graph1, graph2)
 is_isomorphic(graph2, graph2)
 is_isomorphic(graph8, graph8)
 
-b = c = randomGraph(1000)$graph
+b = c = randomGraph(1000, seed=31415)$graph
 c[[1]]$edges[1] = 1L
 is_isomorphic(b, c)
 system.time(is_isomorphic(b, c))
