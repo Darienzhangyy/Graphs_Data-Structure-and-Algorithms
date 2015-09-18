@@ -6,6 +6,7 @@ Homework 1 - Eclectic Eagle Scouts
 
 ```{r, echo=F}
 source('graph.R')
+set.seed(31415)
 ```
 
 ## Auxiliary functions
