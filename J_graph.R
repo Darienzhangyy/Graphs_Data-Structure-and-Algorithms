@@ -460,7 +460,8 @@ is_connected = function(g, v1, v2) {
   if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) { 
     return(stop('Invalid vertices; please enter valid vertices.', call.=F))
   }
-  g = h = adjacencyMatrix(g)
+  g = adjacencyMatrix(g)
+  g[(g>0)] = 1; h = g
   for(i in seq(sqrt(length(g)))) { 
     if(h[v1, v2]>0) { return(T) }
     h = h %*% g
