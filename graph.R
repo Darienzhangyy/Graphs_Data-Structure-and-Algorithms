@@ -1,3 +1,4 @@
+# removes all objects
 rm(list=ls())
 
 # graphs
