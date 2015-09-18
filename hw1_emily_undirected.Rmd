@@ -34,8 +34,8 @@ graph3 = list(A = list(edges   = c(2L),
                        weights = c(1 )),
               B = list(edges   = c(4L,1L),
                        weights = c(1,1 )),
-              C = list(edges   = c(3L, 5L),
-                       weights = c(1,1 )),
+              C = list(edges   = c(3L,5L),
+                       weights = c(1,1)),
               D = list(edges   = c(2L),
                        weights = c(1 )),
               E = list(edges   = c(3L),
@@ -54,9 +54,7 @@ is_undirected<- function (p) {
      m0[i,p[[i]]$edges]<-1/p[[i]]$weights    
         if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0 & m0[i,j]!=0 ) {
                 n=n+1
-        } else if (m0[i,j]==m0[j,i] & i==j) { 
-                n=n+1
-        } else {
+        }  else {
                 n=n
               }
         }
