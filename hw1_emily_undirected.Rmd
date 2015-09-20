@@ -3,72 +3,48 @@ title: "hw1 is_undirected"
 output: pdf_document
 ---
 ```{r, echo=TRUE}
-graph1 = list(A = list(edges   = c(2L),
-                       weights = c(1 )),
-              B = list(edges   = c(3L),
-                       weights = c(1 )),
-              C = list(edges   = c(5L),
-                       weights = c(1 )),
-              D = list(edges   = c(2L),
-                       weights = c(1 )),
-              E = list(edges   = c(4L,6L),
-                       weights = c(1,1  )),
-              F = list(edges   = c(),
-                       weights = c())
-             )
-graph2 = list(A = list(edges   = c(2L),
-                       weights = c(14)),
-              B = list(edges   = c(3L,4L),
-                       weights = c(23,13)),
-              D = list(edges   = c(1L),
-                       weights = c(5) ),
-              F = list(edges   = c(1L,5L),
-                       weights = c(43,33)),
-              N = list(edges   = c(1L,2L,4L),
-                       weights = c(33,22,11))
-             )
 
 
-
-graph3 = list(A = list(edges   = c(2L),
-                       weights = c(1 )),
-              B = list(edges   = c(4L,1L),
-                       weights = c(1,1 )),
-              C = list(edges   = c(3L,5L),
-                       weights = c(1,1)),
-              D = list(edges   = c(2L),
-                       weights = c(1 )),
-              E = list(edges   = c(3L),
-                       weights = c(1 )),
-              F = list(edges   = c(),
-                       weights = c())
-             )
-
-
-is_undirected<- function (p) {
- 
- m0<-matrix(0, nrow=length(p), ncol =length(p))   
- n=0
- for (j in 1:ncol(m0)) {
- for (i in 1:nrow(m0)) {
-     m0[i,p[[i]]$edges]<-1/p[[i]]$weights    
-        if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0 & m0[i,j]!=0 ) {
+is_undirected<- function(g){ 
+#check if the graph is valid; if it's not return false
+   if (is_valid(g)==F) {
+         return (FALSE); break
+} else if (length(g)<=1) {
+           return(TRUE); break} else {
+        
+#create a matrix of 0's with nrow=ncol=length(g)         
+         m0<-matrix(0, nrow=length(g), ncol =length(g))   
+#give initial value n=0 
+         n=0
+     for (j in 1:length(g)) {
+     for (i in 1:length(g)) {
+#store each entry of m0[i,j] with a weight that correponds to its edge for each vertex
+#vertex i is transformed to m[i,]
+#if vertex i directly connects to vertex j(j is a edge value), store its corresponding weight value into m0[i,j]
+     m0[i,g[[i]]$edges]<-1/g[[i]]$weights    
+#if i and j have the same weight and i and j are not equal and they're not zero's
+#record n=n+1
+     if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {
                 n=n+1
-        }  else {
-                n=n
-              }
+     }  else { if (length(g)==2){
+                n=n+1
+        } else {
+                        n=n
+                } 
         }
- }
-
+     }
+     }
+ 
+#if n>0 and m0 is symetric that means vertex i and vertex j are undirected 
    if (n>0 & (isSymmetric(m0))){
-        return (TRUE)} else {
+        return (TRUE); break 
+        }else{
                 return (FALSE)
         }
+  }
+ 
 }
 
-is_undirected(graph1)
-is_undirected(graph2)
-is_undirected(graph3)
 
 
 
