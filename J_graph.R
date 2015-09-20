@@ -138,7 +138,10 @@ graphX = list(A = list(edges=c(2L), weights=c(1)),
 ######################################################################################################
 # Input - length, the number of desired vertices; 
 #         maxWeight, the maximum desired edge weight; 
-#         seed, optional seed number for reproducability.
+#         seed, optional seed number for reproducability;
+#         undirected, logical (default: FALSE) indicating whether graph should be undirected;
+#         adjacency, logical (default: FALSE returns list-based graph) indicating whether adjacency 
+#         matrix should be returned.
 #
 # Output - graph, a graph object;
 #          seed, the seed used to construct graph.
@@ -146,7 +149,7 @@ graphX = list(A = list(edges=c(2L), weights=c(1)),
 # Description - Constructs a valid graph object with (length) vertices and edge weights no 
 #               larger than (maxWeight).
 
-randomGraph = function(length, maxWeight=10, seed=NULL) {
+randomGraph = function(length, maxWeight=10, seed=NULL, undirected=F, adjacency=F) {
   seed = ifelse(is.null(seed), round(runif(1, 1, 1e5)), seed)
   set.seed(seed)
   g = list()
@@ -163,6 +166,14 @@ randomGraph = function(length, maxWeight=10, seed=NULL) {
   }
   g = lapply(g, filler)
   names(g) = as.character(seq(length))
+  if(undirected==T) {
+    g = adjacencyMatrix(g)
+    g[lower.tri(g)] = 0
+    g[lower.tri(g)] = g[lower.tri(g)] + t(g)[lower.tri(g)]
+    if(!adjacency) { g = listGraph(g) }
+  } else {
+    if(adjacency) { g = adjacencyMatrix(g) }
+  }
   return(list(graph=g, seed=seed))
 }
 
@@ -186,6 +197,24 @@ adjacencyMatrix = function(g) {
   }
   dimnames(a) = list(names(g), names(g))
   return(a)
+}
+
+# listGraph()
+######################################################################################################
+# Input - a, an adjacency matrix labeled with vertex names.
+#
+# Output - g, a graph object.
+#
+# Description - Constructs list-based graph object from adjacency matrix, 
+#               with dimnames as vertex labels.
+
+listGraph = function(a) {
+  rowToList = function(row) { list(edges=seq(ncol(a))[(row>0)], weights=unname(row[(row>0)])) }
+  g = apply(a, 1, rowToList)
+  makeNull = seq(ncol(a))[(rowSums(a)==0 & colSums(a)>0)]
+  if(length(makeNull)>0) { g[makeNull] = list(list(edges=NULL, weights=NULL)) }
+  if(is.null(dimnames(a)[[1]])) { names(g) = NULL }
+  return(g)
 }
 
 
@@ -460,7 +489,8 @@ is_connected = function(g, v1, v2) {
   if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) { 
     return(stop('Invalid vertices; please enter valid vertices.', call.=F))
   }
-  g = h = adjacencyMatrix(g)
+  g = adjacencyMatrix(g)
+  g[(g>0)] = 1; h = g
   for(i in seq(sqrt(length(g)))) { 
     if(h[v1, v2]>0) { return(T) }
     h = h %*% g
