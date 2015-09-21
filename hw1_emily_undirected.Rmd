@@ -4,12 +4,12 @@ output: pdf_document
 ---
 ```{r, echo=TRUE}
 
-
 is_undirected<- function(g){ 
 #check if the graph is valid; if it's not return false
    if (is_valid(g)==F) {
-         return (FALSE); break
-} else if (length(g)<=1) {
+         stop ("error"); break
+} else { 
+        if (length(g)<=1) {
            return(TRUE); break} else {
         
 #create a matrix of 0's with nrow=ncol=length(g)         
@@ -42,8 +42,9 @@ is_undirected<- function(g){
                 return (FALSE)
         }
   }
- 
 }
+}
+
 
 
 
