@@ -35,7 +35,7 @@ for (i in 1 : length(g)){
 }
 }
 ##As long as "count" is not equal to zero, there must be a mistake somewhere
-if (count == 0) {print ("TRUE")}
-  else {print("FALSE")}
+if (count == 0) {print (TRUE)}
+  else {print(FALSE)}
 }
 ```
