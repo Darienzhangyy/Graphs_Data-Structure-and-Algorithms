@@ -11,6 +11,20 @@ source('graph.R')
 ## Auxiliary functions
 This section demonstrates the workhorse functions powering the predicate and higher functions. Specifically, these allow one to convert list-based graph objects to adjacency matrices, to construct random graphs, to follow down and trace up paths, and to identify the minimally weighted path if these path sets intersect.
 
+### ```randomGraph(length, maxWeight=10, seed=NULL, undirected=FALSE, adjacency=FALSE)```
+Constructs ```graph```, a valid graph object with ```length``` vertices, labeled 1 to ```length```, and edge weights uniformly distributed from 1 to ```maxWeight```. Optionally, setting the ```seed``` allows one to reconstruct a previously generated graph, as ```seed``` is included as the second object in the output list. Setting ```undirected=TRUE``` ensures that an undirected graph is generated, while ```adjacency=TRUE``` outputs the graph as an adjacency matrix rather than a list-based graph object.
+```{r}
+graphOut = randomGraph(5, maxWeight=12)
+gSeed = graphOut$seed
+g = graphOut$graph
+g
+adj = adjacencyMatrix(g)
+adj
+
+h = randomGraph(5, maxWeight=12, seed=gSeed)$graph
+identical(g, h)
+```
+
 ### ```adjacencyMatrix(g)```
 Takes a list-based graph object and converts it to an adjacency matrix with the vertex labels as ```dimnames```. 
 ```{r}
@@ -19,17 +33,10 @@ adjacencyMatrix(graph2)
 adjacencyMatrix(graph2) %*% adjacencyMatrix(graph2)
 ```
 
-### ```randomGraph(length, maxWeight=10, seed=NULL)```
-Constructs ```graph```, a valid graph object with ```length``` vertices, labeled 1 to ```length```, and edge weights uniformly distributed from 1 to ```maxWeight```. Optionally, setting the ```seed``` allows one to reconstruct a previously generated graph, as ```seed``` is included as the second object in the output list. 
+### ```listGraph(a)```
+Takes an adjacency matrix and converts it to a list-based graph object.
 ```{r}
-graphOut = randomGraph(5, maxWeight=12)
-gSeed = graphOut$seed
-g = graphOut$graph
-g
-adjacencyMatrix(g)
-
-h = randomGraph(5, maxWeight=12, seed=gSeed)$graph
-identical(g, h)
+listGraph(adj)
 ```
 
 ### ```followVertex(pathList, a)```, ```traceVertex(pathList, a)```, ```getTails(pathList)```, ```getHeads(pathList)```, ```weights(pathList)```, and ```is_linked(pathDn, pathUp, heads, tails)```
