@@ -453,15 +453,14 @@ is_isomorphic = function(g1, g2) {
   }
   if(length(g1)!=length(g2)) { return(F) }
   if(suppressWarnings(any(sort(names(g1))!=sort(names(g2))))) { return(F) }
-  sortAndLabel = function(vertex) {
-    df = data.frame(edges=unlist(names(g1)[vertex$edges]), weights=unlist(vertex$weights))
+  sortAndLabel = function(vertex, g) {
+    df = data.frame(edges=unlist(names(g)[vertex$edges]), weights=unlist(vertex$weights))
     df = df[order(df$edges), , drop=F]
     return(list(edges=df$edges, weights=df$weights))
   }
-  g1 = lapply(g1, sortAndLabel)
-  g2 = lapply(g2, sortAndLabel)
-  g1 = g1[sort(names(g1))]; g2 = g2[sort(names(g2))]
-  a1 = adjacencyMatrix(g1); a2 = adjacencyMatrix(g2)
+  g1 = lapply(g1, sortAndLabel, g=g1); g2 = lapply(g2, sortAndLabel, g=g2)
+  g1 = g1[sort(names(g1))];            g2 = g2[sort(names(g2))]
+  a1 = adjacencyMatrix(g1);            a2 = adjacencyMatrix(g2)
   if(!identical(a1, a2)) { return(F) }
   return(T)
 }
