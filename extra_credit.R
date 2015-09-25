@@ -7,41 +7,40 @@
 # Description - Constructs adjacency matrix from graph object, with vertices as dimnames.
 
 ###1. Function - is_valid
-
-is_valid <- function(g){
-        count <- 0
-        ##Check if there are names for the primary list that they are all unique
-        primary <- names(g)
-        if (sum(duplicated(primary)) != 0){count=count+1}
-        if (length(primary)==0){count=count+1}
-        for (i in 1 : length(g)){
-                ##Check that object is a list of lists
-                if (typeof(g[[i]])!="list") {count=count+1;break}
-                ##Check that each secondary list contains only edges and weights vectors 
-                if (length(g[[i]])!=2) {count=count+1;break}
-                if (!names(g[[i]])[1] %in% c("edges","weights")) {count=count+1;break}
-                if (!names(g[[i]])[2] %in% c("edges","weights")) {count=count+1;break}
-                if (names(g[[i]])[1]==names(g[[i]])[2]) {count=count+1;break}
-                ##Check duplicated edges
-                if (sum(duplicated(g[[i]][[1]])) != 0){count=count+1;break}
-                ##Check that edges and weights vectors that are of the appropriate type
-                if (!is.null(g[[i]][[1]])){
-                        if (!is.vector(g[[i]][[1]])) {count=count+1;break}
-                        if (min(g[[i]][[1]]) <= 0 | NA %in% g[[i]][[1]]) {count=count+1;break}
-                        if (!is.numeric(g[[i]][[2]])) {count=count+1;break}
-                        if (!is.integer(g[[i]]$edges)) {count=count+1;break}
-                        ##Check that there are not any edges to non-existent vertices
-                        if (max(g[[i]][[1]])>length(g))  {count=count+1;break}
-                        ##Check that all weights are not less than or equal to 0
-                        if (min(g[[i]][[2]])<=0 | NA %in% g[[i]][[2]]) {count=count+1;break}
-                        ##Check that every edge has a weight
-                        if (length(g[[i]][[1]]) != length(g[[i]][[2]])){count=count+1;break}
-                }
-        }
-        ##As long as "count" is not equal to zero, there must be a mistake somewhere
-        if (count == 0) {print (TRUE)}
-        else {print(FALSE)}
+is_valid = function(g) {
+  warnMe = function(index) {
+    warningSet = c('Invalid list structure to graph object.',
+                   'Invalid vertex label(s) detected.',
+                   'Invalid vertex attribute structure(s) detected; only "edges" and "weights" accepted.',
+                   'NA(s) detected.',
+                   'Non-integer edge(s) detected.',
+                   'Non-numeric weight(s) detected.',
+                   'Nonexistent edge(s) detected.',
+                   'Nonpositive weight(s) detected.',
+                   'Edge-weight mismatch(es) detected.',
+                   'Duplicate edge(s) detected.')
+    return(warning(warningSet[index], call.=F))
+  }
+  if(!is.list(g)) { warnMe(1); return(F) }
+  if(is.null(unlist(g))) { warnMe(1); return(F) }
+  if(!is.list(unlist(g, recursive=F))) { warnMe(1); return(F) }
+  if(is.list(unlist(unlist(g, recursive=F), recursive=F))) { warnMe(1); return(F) }
+  if(is.null(names(g))) { warnMe(2); return(F) }
+  if(suppressWarnings(length(unique(names(g)))!=length(names(g)))) { warnMe(2); return(F) }
+  if(!all(unlist(lapply(g, function(x) { ifelse(sort(names(x))!=c('edges', 'weights'), F, T) } )))) { warnMe(3); return(F) }
+  h = g;  names(h) = NULL;  k = unlist(h, recursive=F)
+  if(any(is.na(unlist(k[names(k)=='edges']))) | any(is.na(unlist(k[names(k)=='weights'])))) { warnMe(4); return(F) }
+  if(typeof(unlist(k[names(k)=='edges']))!='integer') { warnMe(5); return(F) } 
+  if(typeof(unlist(k[names(k)=='weights']))!='double') { warnMe(6); return(F) }
+  if(!all(unique(unlist(k[names(k)=='edges'])) %in% seq(length(g)))) { warnMe(7); return(F) }
+  if(!all(unique(unlist(k[names(k)=='weights']))>0)) { warnMe(8); return(F) }
+  if(length(unlist(k[names(k)=='edges']))!=length(unlist(k[names(k)=='weights']))) { warnMe(9); return(F) }
+  m = unlist(g, recursive=F)
+  if(!all(unlist(lapply(m[names(k)=='edges'], function(x) { length(unique(x))==length(x) } )))) { warnMe(10); return(F) }
+  return(T)
 }
+
+
 
 
 is_undirected<- function(g){ 
@@ -61,7 +60,7 @@ is_undirected<- function(g){
                                                 #store each entry of m0[i,j] with a weight that correponds to its edge for each vertex
                                                 #vertex i is transformed to m[i,]
                                                 #if vertex i directly connects to vertex j(j is a edge value), store its corresponding weight value into m0[i,j]
-                                                m0[i,g[[i]]$edges]<-1/g[[i]]$weights    
+                                                m0[i,g[[i]]$edges]<-g[[i]]$weights    
                                                 #if i and j have the same weight and i and j are not equal and they're not zero's
                                                 #record n=n+1
                                                 if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {
