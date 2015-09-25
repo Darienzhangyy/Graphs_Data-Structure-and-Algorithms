@@ -1,7 +1,3 @@
----
-title: "graph.R"
-output: pdf_document
----
 # graphs
 ######################################################################################################
 graph1 = list(A = list(edges=c(2L), weights=c(1)),
@@ -365,46 +361,61 @@ is_linked = function(pathDn, pathUp, heads, tails) {
   }
 }
 
-        ###1. Function - is_valid
-        is_valid <- function(g){
-                count <- 0
-                ##Check if there are names for the primary list that they are all unique
-                primary <- names(g)
-                if (sum(duplicated(primary)) != 0){count=count+1}
-                if (length(primary)==0){count=count+1}
-                for (i in 1 : length(g)){
-                        ##Check that object is a list of lists
-                        if (typeof(g[[i]])!="list") {count=count+1;break}
-                        ##Check that each secondary list contains only edges and weights vectors 
-                        if (length(g[[i]])!=2) {count=count+1;break}
-                        if (!names(g[[i]])[1] %in% c("edges","weights")) {count=count+1;break}
-                        if (!names(g[[i]])[2] %in% c("edges","weights")) {count=count+1;break}
-                        if (names(g[[i]])[1]==names(g[[i]])[2]) {count=count+1;break}
-                        ##Check duplicated edges
-                        if (sum(duplicated(g[[i]][[1]])) != 0){count=count+1;break}
-                        ##Check that edges and weights vectors that are of the appropriate type
-                        if (!is.null(g[[i]][[1]])){
-                                if (!is.vector(g[[i]][[1]])) {count=count+1;break}
-                                if (min(g[[i]][[1]]) <= 0 | NA %in% g[[i]][[1]]) {count=count+1;break}
-                                if (!is.numeric(g[[i]][[2]])) {count=count+1;break}
-                                if (!is.integer(g[[i]]$edges)) {count=count+1;break}
-                                ##Check that there are not any edges to non-existent vertices
-                                if (max(g[[i]][[1]])>length(g))  {count=count+1;break}
-                                ##Check that all weights are not less than or equal to 0
-                                if (min(g[[i]][[2]])<=0 | NA %in% g[[i]][[2]]) {count=count+1;break}
-                                ##Check that every edge has a weight
-                                if (length(g[[i]][[1]]) != length(g[[i]][[2]])){count=count+1;break}
-                        }
-                }
-                ##As long as "count" is not equal to zero, there must be a mistake somewhere
-                if (count == 0) {print (TRUE)}
-                else {print(FALSE)}
-        }
 
+# is_valid()
+######################################################################################################
+# Input - g, a graph object.
+# 
+# Output - TRUE if g is valid, FALSE if not.
+# 
+# Description - Validate the graph object to ensure that it meets all requirements: 
+#               (1) Check that object is a list of non-null lists. 
+#               (2) Check that there are names for the primary list that they are all unique. 
+#               (3) Check that each secondary list contains only edges and weights vectors.
+#               (4) Check that there are no NAs.
+#               (5) Check that edges vectors are of the appropriate type. 
+#               (6) Check that weights vectors are of the appropriate type.
+#               (7) Check that there are no edges to non-existent vertices. 
+#               (8) Check that all weights are strictly greater than 0. 
+#               (9) Check that every edge has a weight.
+#              (10) Check that no edges are duplicated.
+
+is_valid = function(g) {
+  warnMe = function(index) {
+    warningSet = c('Invalid list structure to graph object.',
+                   'Invalid vertex label(s) detected.',
+                   'Invalid vertex attribute structure(s) detected; only "edges" and "weights" accepted.',
+                   'NA(s) detected.',
+                   'Non-integer edge(s) detected.',
+                   'Non-numeric weight(s) detected.',
+                   'Nonexistent edge(s) detected.',
+                   'Nonpositive weight(s) detected.',
+                   'Edge-weight mismatch(es) detected.',
+                   'Duplicate edge(s) detected.')
+    return(warning(warningSet[index], call.=F))
+  }
+  if(!is.list(g)) { warnMe(1); return(F) }
+  if(is.null(unlist(g))) { warnMe(1); return(F) }
+  if(!is.list(unlist(g, recursive=F))) { warnMe(1); return(F) }
+  if(is.list(unlist(unlist(g, recursive=F), recursive=F))) { warnMe(1); return(F) }
+  if(is.null(names(g))) { warnMe(2); return(F) }
+  if(suppressWarnings(length(unique(names(g)))!=length(names(g)))) { warnMe(2); return(F) }
+  if(!all(unlist(lapply(g, function(x) { ifelse(sort(names(x))!=c('edges', 'weights'), F, T) } )))) { warnMe(3); return(F) }
+  h = g;  names(h) = NULL;  k = unlist(h, recursive=F)
+  if(any(is.na(unlist(k[names(k)=='edges']))) | any(is.na(unlist(k[names(k)=='weights'])))) { warnMe(4); return(F) }
+  if(typeof(unlist(k[names(k)=='edges']))!='integer') { warnMe(5); return(F) } 
+  if(typeof(unlist(k[names(k)=='weights']))!='double') { warnMe(6); return(F) }
+  if(!all(unique(unlist(k[names(k)=='edges'])) %in% seq(length(g)))) { warnMe(7); return(F) }
+  if(!all(unique(unlist(k[names(k)=='weights']))>0)) { warnMe(8); return(F) }
+  if(length(unlist(k[names(k)=='edges']))!=length(unlist(k[names(k)=='weights']))) { warnMe(9); return(F) }
+  m = unlist(g, recursive=F)
+  if(!all(unlist(lapply(m[names(k)=='edges'], function(x) { length(unique(x))==length(x) } )))) { warnMe(10); return(F) }
+  return(T)
+}
 
 is_undirected<- function(g){ 
         #check if the graph is valid; if it's not return false
-        if (is_valid(g)==F) {
+        if (invisible(is_valid(g))==F) {
                 stop ("error"); break
         } else { 
                 if (length(g)<=1) {
@@ -419,7 +430,7 @@ is_undirected<- function(g){
                                                 #store each entry of m0[i,j] with a weight that correponds to its edge for each vertex
                                                 #vertex i is transformed to m[i,]
                                                 #if vertex i directly connects to vertex j(j is a edge value), store its corresponding weight value into m0[i,j]
-                                                m0[i,g[[i]]$edges]<-1/g[[i]]$weights    
+                                                m0[i,g[[i]]$edges]<-g[[i]]$weights    
                                                 #if i and j have the same weight and i and j are not equal and they're not zero's
                                                 #record n=n+1
                                                 if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {
@@ -472,23 +483,19 @@ is_isomorphic = function(g1, g2) {
   return(T)
 }
 
-is_connected <- function(g,v1,v2){
-        if (is_valid(g)==FALSE){
-                stop("error");break
-        }
-        if(v1 %in% names(g) && v2 %in% names(g)){
-                path=c(g[[v1]]$edges)
-                node=NULL
-                for (i in 1:length(g)){
-                        node=c(node,names(g[path[i]]))
-                        path=c(path,g[[node[i]]]$edges)
-                }
-        }
-        if (v2 %in% node){
-                return(TRUE)
-        }else{
-                return(FALSE)
-        }
+is_connected = function(g, v1, v2) {
+  if(!suppressWarnings(is_valid(g))) { return(stop('Invalid graph.', call.=F)) }
+  names(g) = toupper(names(g)); v1 = toupper(v1); v2 = toupper(v2)
+  if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) { 
+    return(stop('Invalid vertices; please enter valid vertices.', call.=F))
+  }
+  g = adjacencyMatrix(g)
+  g[(g>0)] = 1; h = g
+  for(i in seq(sqrt(length(g)))) { 
+    if(h[v1, v2]>0) { return(T) }
+    h = h %*% g
+  } 
+  return(F)
 }
 
 # shortest_path()
