@@ -32,21 +32,21 @@ graph5 = list(A = list(edges=c(2L), weights=c(1)),
               D = list(edges=c(2L), weights=c(1)),
               C = list(edges=c(5L), weights=c(1)),
               F = list(edges=c(), weights=c())
-) # reordered graph1         
+) # reordered graph1
 graph6 = list(list(edges=c(2L), weights=c(1)),
               list(edges=c(4L,6L), weights=c(1,1)),
               list(edges=c(3L), weights=c(1)),
               list(edges=c(2L), weights=c(1)),
               list(edges=c(5L), weights=c(1)),
               list(edges=c(), weights=c())
-) # reordered graph3       
+) # reordered graph3
 graph7 = list(list(edges=c(2L), weights=c(1)),
               list(edges=c(4L,6L), weights=c(1,5)),
               list(edges=c(3L), weights=c(1)),
               list(edges=c(2L), weights=c(1)),
               list(edges=c(5L), weights=c(1)),
               list(edges=c(), weights=c())
-) # reweighted graph6        
+) # reweighted graph6
 graph8 = list(A = list(edges=c(2L,3L,4L,5L), weights=c(14,5,43,33)),
               B = list(edges=c(1L,3L,4L,5L), weights=c(14,23,13,22)),
               D = list(edges=c(1L,2L), weights=c(5,23)),
@@ -133,17 +133,17 @@ graphX = list(A = list(edges=c(2L), weights=c(1)),
 
 # randomGraph()
 ######################################################################################################
-# Input - length, the number of desired vertices; 
-#         maxWeight, the maximum desired edge weight; 
+# Input - length, the number of desired vertices;
+#         maxWeight, the maximum desired edge weight;
 #         seed, optional seed number for reproducability;
 #         undirected, logical (default: FALSE) indicating whether graph should be undirected;
-#         adjacency, logical (default: FALSE returns list-based graph) indicating whether adjacency 
+#         adjacency, logical (default: FALSE returns list-based graph) indicating whether adjacency
 #         matrix should be returned.
 #
 # Output - graph, a graph object;
 #          seed, the seed used to construct graph.
 #
-# Description - Constructs a valid graph object with (length) vertices and edge weights no 
+# Description - Constructs a valid graph object with (length) vertices and edge weights no
 #               larger than (maxWeight).
 
 randomGraph = function(length, maxWeight=10, seed=NULL, undirected=F, adjacency=F) {
@@ -157,7 +157,7 @@ randomGraph = function(length, maxWeight=10, seed=NULL, undirected=F, adjacency=
     n = ceiling(runif(1, 1, sqrt(length)))
     uniqueEdges = unique(as.integer(ceiling(runif(n, 1, length))))
     n = length(uniqueEdges)
-    filled = list(edges=uniqueEdges, 
+    filled = list(edges=uniqueEdges,
                   weights=as.numeric(ceiling(runif(n, 1e-10, maxWeight))))
     return(filled)
   }
@@ -202,7 +202,7 @@ adjacencyMatrix = function(g) {
 #
 # Output - g, a graph object.
 #
-# Description - Constructs list-based graph object from adjacency matrix, 
+# Description - Constructs list-based graph object from adjacency matrix,
 #               with dimnames as vertex labels.
 
 listGraph = function(a) {
@@ -217,7 +217,7 @@ listGraph = function(a) {
 
 # followVertexInner()
 ######################################################################################################
-# Input - path, a path object (a primary list of paths, each containing a secondary list with two 
+# Input - path, a path object (a primary list of paths, each containing a secondary list with two
 #                              vectors: $vertices and $weight);
 #         A, an adjacency matrix
 #
@@ -228,10 +228,10 @@ listGraph = function(a) {
 
 followVertexInner = function(path, A=a) {
   tail = path$vertices[length(path$vertices)]
-  out = as.data.frame(cbind(unname(A[tail,!match(A[tail,], 0, nomatch=F)]), 
+  out = as.data.frame(cbind(unname(A[tail,!match(A[tail,], 0, nomatch=F)]),
                             colnames(A)[!match(A[tail,], 0, nomatch=F)]))
   dimnames(out) = list(seq(nrow(out)), c('weight', 'vertices'))
-  out = unname(apply(out, 1, function(x) { list(vertices=c(path$vertices, unname(x[2])), 
+  out = unname(apply(out, 1, function(x) { list(vertices=c(path$vertices, unname(x[2])),
                                                 weight=sum(path$weight, as.integer(unname(x[1])))) } ))
   return(out)
 }
@@ -246,15 +246,15 @@ followVertexInner = function(path, A=a) {
 #
 # Description - Removes the extra layer of listing.
 
-followVertex = function(pathList, a) { 
+followVertex = function(pathList, a) {
   out = unlist(lapply(pathList, followVertexInner, A=a), recursive=F)
-  if(length(out)==0) { return(NULL) } 
+  if(length(out)==0) { return(NULL) }
   return(out)
 }
 
 # traceVertexInner()
 ######################################################################################################
-# Input - path, a path object (a primary list of paths, each containing a secondary list with two 
+# Input - path, a path object (a primary list of paths, each containing a secondary list with two
 #                              vectors: $vertices and $weight);
 #         A, an adjacency matrix
 #
@@ -283,9 +283,9 @@ traceVertexInner = function(path, A=a) {
 #
 # Description - Removes the extra layer of listing.
 
-traceVertex = function(pathList, a) { 
+traceVertex = function(pathList, a) {
   out = unlist(lapply(pathList, traceVertexInner, A=a), recursive=F)
-  if(length(out)==0) { return(NULL) } 
+  if(length(out)==0) { return(NULL) }
   return(out)
 }
 
@@ -336,8 +336,8 @@ weights = function(pathList) { unlist(lapply(pathList, function(x) { x$weight } 
 #                     (tails);
 #               bestPath, a character vector containing the vertices of the weighted shortest path.)
 #
-# Description - Checks whether the intersection of terminal and initial vertex sets is empty. If not, 
-#               calculates the path weights for each path through the intersection, reporting the path 
+# Description - Checks whether the intersection of terminal and initial vertex sets is empty. If not,
+#               calculates the path weights for each path through the intersection, reporting the path
 #               and weight of the smallest.
 
 is_linked = function(pathDn, pathUp, heads, tails) {
@@ -365,18 +365,18 @@ is_linked = function(pathDn, pathUp, heads, tails) {
 # is_valid()
 ######################################################################################################
 # Input - g, a graph object.
-# 
+#
 # Output - TRUE if g is valid, FALSE if not.
-# 
-# Description - Validate the graph object to ensure that it meets all requirements: 
-#               (1) Check that object is a list of non-null lists. 
-#               (2) Check that there are names for the primary list that they are all unique. 
+#
+# Description - Validate the graph object to ensure that it meets all requirements:
+#               (1) Check that object is a list of non-null lists.
+#               (2) Check that there are names for the primary list that they are all unique.
 #               (3) Check that each secondary list contains only edges and weights vectors.
 #               (4) Check that there are no NAs.
-#               (5) Check that edges vectors are of the appropriate type. 
+#               (5) Check that edges vectors are of the appropriate type.
 #               (6) Check that weights vectors are of the appropriate type.
-#               (7) Check that there are no edges to non-existent vertices. 
-#               (8) Check that all weights are strictly greater than 0. 
+#               (7) Check that there are no edges to non-existent vertices.
+#               (8) Check that all weights are strictly greater than 0.
 #               (9) Check that every edge has a weight.
 #              (10) Check that no edges are duplicated.
 
@@ -403,7 +403,7 @@ is_valid = function(g) {
   if(!all(unlist(lapply(g, function(x) { ifelse(sort(names(x))!=c('edges', 'weights'), F, T) } )))) { warnMe(3); return(F) }
   h = g;  names(h) = NULL;  k = unlist(h, recursive=F)
   if(any(is.na(unlist(k[names(k)=='edges']))) | any(is.na(unlist(k[names(k)=='weights'])))) { warnMe(4); return(F) }
-  if(typeof(unlist(k[names(k)=='edges']))!='integer') { warnMe(5); return(F) } 
+  if(typeof(unlist(k[names(k)=='edges']))!='integer') { warnMe(5); return(F) }
   if(typeof(unlist(k[names(k)=='weights']))!='double') { warnMe(6); return(F) }
   if(!all(unique(unlist(k[names(k)=='edges'])) %in% seq(length(g)))) { warnMe(7); return(F) }
   if(!all(unique(unlist(k[names(k)=='weights']))>0)) { warnMe(8); return(F) }
@@ -413,24 +413,24 @@ is_valid = function(g) {
   return(T)
 }
 
-is_undirected<- function(g){ 
+is_undirected<- function(g){
         #check if the graph is valid; if it's not return false
         if (invisible(is_valid(g))==F) {
                 stop ("error"); break
-        } else { 
+        } else {
                 if (length(g)<=1) {
                         return(TRUE); break} else {
-                                
-                                #create a matrix of 0's with nrow=ncol=length(g)         
-                                m0<-matrix(0, nrow=length(g), ncol =length(g))   
-                                #give initial value n=0 
+
+                                #create a matrix of 0's with nrow=ncol=length(g)
+                                m0<-matrix(0, nrow=length(g), ncol =length(g))
+                                #give initial value n=0
                                 n=0
                                 for (j in 1:length(g)) {
                                         for (i in 1:length(g)) {
                                                 #store each entry of m0[i,j] with a weight that correponds to its edge for each vertex
                                                 #vertex i is transformed to m[i,]
                                                 #if vertex i directly connects to vertex j(j is a edge value), store its corresponding weight value into m0[i,j]
-                                                m0[i,g[[i]]$edges]<-g[[i]]$weights    
+                                                m0[i,g[[i]]$edges]<-g[[i]]$weights
                                                 #if i and j have the same weight and i and j are not equal and they're not zero's
                                                 #record n=n+1
                                                 if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {
@@ -439,14 +439,14 @@ is_undirected<- function(g){
                                                         n=n+1
                                                 } else {
                                                         n=n
-                                                } 
+                                                }
                                                 }
                                         }
                                 }
-                                
-                                #if n>0 and m0 is symetric that means vertex i and vertex j are undirected 
+
+                                #if n>0 and m0 is symetric that means vertex i and vertex j are undirected
                                 if (n>0 & (isSymmetric(m0))){
-                                        return (TRUE); break 
+                                        return (TRUE); break
                                 }else{
                                         return (FALSE)
                                 }
@@ -456,18 +456,18 @@ is_undirected<- function(g){
 
 # is_isomorphic
 ######################################################################################################
-# Input - g1, a graph object; 
+# Input - g1, a graph object;
 #         g2, a graph object.
 #
 # Output - TRUE if g1 and g2 are isomorphic, FALSE if not.
 #
-# Description - Check if the graph objects are isomorphic, meaning all vertices, edges, and weights 
-#               are identical. Comparison of vertices should be based on names not indexes, indexes 
+# Description - Check if the graph objects are isomorphic, meaning all vertices, edges, and weights
+#               are identical. Comparison of vertices should be based on names not indexes, indexes
 #               should only be used if vertex labels are not defined.
 
 is_isomorphic = function(g1, g2) {
-  if(!(suppressWarnings(is_valid(g1)) & suppressWarnings(is_valid(g2)))) { 
-    return(stop('Invalid graph.', call.=F)) 
+  if(!(suppressWarnings(is_valid(g1)) & suppressWarnings(is_valid(g2)))) {
+    return(stop('Invalid graph.', call.=F))
   }
   if(length(g1)!=length(g2)) { return(F) }
   if(suppressWarnings(any(sort(names(g1))!=sort(names(g2))))) { return(F) }
@@ -486,40 +486,40 @@ is_isomorphic = function(g1, g2) {
 is_connected = function(g, v1, v2) {
   if(!suppressWarnings(is_valid(g))) { return(stop('Invalid graph.', call.=F)) }
   names(g) = toupper(names(g)); v1 = toupper(v1); v2 = toupper(v2)
-  if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) { 
+  if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) {
     return(stop('Invalid vertices; please enter valid vertices.', call.=F))
   }
   g = adjacencyMatrix(g)
   g[(g>0)] = 1; h = g
-  for(i in seq(sqrt(length(g)))) { 
+  for(i in seq(sqrt(length(g)))) {
     if(h[v1, v2]>0) { return(T) }
     h = h %*% g
-  } 
+  }
   return(F)
 }
 
 # shortest_path()
 ######################################################################################################
-# Input - g, graph object; 
-#         v1, a vertex label in g; 
+# Input - g, graph object;
+#         v1, a vertex label in g;
 #         v2, a vertex label in g.
 #
-# Output - a vector of the names (or indexes if unlabeled) of vertices that make up the shortest 
+# Output - a vector of the names (or indexes if unlabeled) of vertices that make up the shortest
 #          path, in order. If no path exists, returns an empty vector.
 #
 # Description - Find the shortest path from vertex v1 to vertex v2 using the edges of graph g. Note
-#               that there may not be a unique solution for any given graph, you are only required to 
+#               that there may not be a unique solution for any given graph, you are only required to
 #               return one path.
 #
-# Idea - (1) Initialize a shortest path length as infinity. 
+# Idea - (1) Initialize a shortest path length as infinity.
 #        While upward and downward paths are active (non-NULL):
 #        | (2) Take one step down from terminal vertices of the downward path.
-#        | (3) Eliminate initial vertices of the upward path if the edge weight to reach them 
+#        | (3) Eliminate initial vertices of the upward path if the edge weight to reach them
 #        |     exceeds (shortest path - min(edge weight to reach terminal vertices).
 #        | (4) If the graph is directed, eliminate previously traversed terminal vertices.
 #        | (5) Check for complete paths, choose shortest, compare to shortest path, and update.
 #        | (6) Take one step up from initial vertices of the upward path.
-#        | (7) Eliminate terminal vertices of the downward path if the edge weight to reach  
+#        | (7) Eliminate terminal vertices of the downward path if the edge weight to reach
 #        |     them exceeds (shortest path - min(edge weight to reach initial vertices).
 #        | (8) If the graph is directed, eliminate previously traversed initial vertices.
 #        | (9) Check for complete paths, choose shortest, compare to shortest path, and update.
@@ -527,13 +527,13 @@ is_connected = function(g, v1, v2) {
 shortest_path = function(g, v1, v2) {
   if(!suppressWarnings(is_valid(g))) { return(stop('Invalid graph.', call.=F)) }
   names(g) = toupper(names(g)); v1 = toupper(v1); v2 = toupper(v2)
-  if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) { 
+  if(!(is.character(v1) & is.character(v2) & all(c(v1, v2) %in% names(g)))) {
     return(stop('Invalid vertices; please enter valid vertices.', call.=F))
   }
-  if(!suppressWarnings(is_connected(g, v1, v2))) { 
+  if(!suppressWarnings(is_connected(g, v1, v2))) {
     warning('Unconnected vertices; please enter connected vertices.', call.=F)
-    return(character(0)) 
-  } 
+    return(character(0))
+  }
   a = adjacencyMatrix(g)
   best = Inf
   pathDn = list(list(vertices=v1, weight=0))
@@ -558,9 +558,9 @@ shortest_path = function(g, v1, v2) {
       }
     }
     linkCheck = is_linked(pathDn, pathUp, heads, tails)
-    if(linkCheck$linked==T) { 
+    if(linkCheck$linked==T) {
       possBest = linkCheck$best
-      possBestPath = linkCheck$bestPath 
+      possBestPath = linkCheck$bestPath
       if(possBest<best) { best=possBest; bestPath=possBestPath }
     }
     pathUp = traceVertex(pathUp, a)
@@ -575,9 +575,9 @@ shortest_path = function(g, v1, v2) {
       heads = heads[-which(heads %in% oldHeads)]
     }
     linkCheck = is_linked(pathDn, pathUp, heads, tails)
-    if(linkCheck$linked==T) { 
+    if(linkCheck$linked==T) {
       possBest = linkCheck$best
-      possBestPath = linkCheck$bestPath 
+      possBestPath = linkCheck$bestPath
       if(possBest<best) { best=possBest; bestPath=possBestPath }
     }
   }
