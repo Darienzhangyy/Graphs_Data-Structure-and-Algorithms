@@ -13,122 +13,12 @@ graph2 = list(A = list(edges=c(2L), weights=c(14)),
               F = list(edges=c(1L,5L), weights=c(43,33)),
               N = list(edges=c(1L,2L,4L), weights=c(33,22,11))
 )
-graph3 = list(list(edges=c(2L), weights=c(1)),
-              list(edges=c(3L), weights=c(1)),
-              list(edges=c(5L), weights=c(1)),
-              list(edges=c(2L), weights=c(1)),
-              list(edges=c(4L,6L), weights=c(1,1)),
-              list(edges=c(), weights=c())
-) # unlabeled graph1
-graph4 = list(list(edges=c(2L), weights=c(14)),
-              list(edges=c(3L,4L), weights=c(23,13)),
-              list(edges=c(1L), weights=c(5)),
-              list(edges=c(1L,5L), weights=c(43,33)),
-              list(edges=c(1L,2L,4L), weights=c(33,22,11))
-) # unlabeled graph2
-graph5 = list(A = list(edges=c(2L), weights=c(1)),
-              E = list(edges=c(4L,6L), weights=c(1,1)),
-              B = list(edges=c(3L), weights=c(1)),
-              D = list(edges=c(2L), weights=c(1)),
-              C = list(edges=c(5L), weights=c(1)),
-              F = list(edges=c(), weights=c())
-) # reordered graph1         
-graph6 = list(list(edges=c(2L), weights=c(1)),
-              list(edges=c(4L,6L), weights=c(1,1)),
-              list(edges=c(3L), weights=c(1)),
-              list(edges=c(2L), weights=c(1)),
-              list(edges=c(5L), weights=c(1)),
-              list(edges=c(), weights=c())
-) # reordered graph3       
-graph7 = list(list(edges=c(2L), weights=c(1)),
-              list(edges=c(4L,6L), weights=c(1,5)),
-              list(edges=c(3L), weights=c(1)),
-              list(edges=c(2L), weights=c(1)),
-              list(edges=c(5L), weights=c(1)),
-              list(edges=c(), weights=c())
-) # reweighted graph6        
 graph8 = list(A = list(edges=c(2L,3L,4L,5L), weights=c(14,5,43,33)),
               B = list(edges=c(1L,3L,4L,5L), weights=c(14,23,13,22)),
               D = list(edges=c(1L,2L), weights=c(5,23)),
               F = list(edges=c(1L,2L,5L), weights=c(43,13,11)),
               N = list(edges=c(1L,2L,4L), weights=c(33,22,11))
 ) # undirected
-graph9 = list(A = list(edges=c(2L,3L,4L,5L), weights=c(14,5,43,33)),
-              N = list(edges=c(1L,2L,4L), weights=c(33,22,11)),
-              D = list(edges=c(1L,2L), weights=c(5,23)),
-              F = list(edges=c(1L,2L,5L), weights=c(43,13,11)),
-              B = list(edges=c(1L,3L,4L,5L), weights=c(14,23,13,22))
-) # reordered graph8
-graph10 = list(list(A = list(edges=c(2L), weights=c(1)),
-                    B = list(edges=c(3L), weights=c(1)),
-                    C = list(edges=c(5L), weights=c(1)),
-                    D = list(edges=c(2L), weights=c(1)),
-                    E = list(edges=c(4L,6L), weights=c(1,1)),
-                    F = list(edges=c(), weights=c())
-)) # invalid list structure
-graph11 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               A = list(edges=c(5L), weights=c(1)),
-               D = list(edges=c(2L), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # non-unique vertex labels
-graph12 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), hello=c(1)),
-               D = list(edges=c(2L), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # invalid vertex attribute structure
-graph13 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), weights=c(1)),
-               D = list(edges=c(2), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # invalid edge type
-graph14 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), weights=c(1)),
-               D = list(edges=c(2L), weights=c('1')),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # invalid weight type
-graph15 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), weights=c(1)),
-               D = list(edges=c(8L), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # edge to nonexistent vertex
-graph16 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), weights=c(-1)),
-               D = list(edges=c(2L), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1,1)),
-               F = list(edges=c(), weights=c())
-) # nonpositive weight
-graph17 = list(A = list(edges=c(2L), weights=c(1)),
-               B = list(edges=c(3L), weights=c(1)),
-               C = list(edges=c(5L), weights=c(1)),
-               D = list(edges=c(2L), weights=c(1)),
-               E = list(edges=c(4L,6L), weights=c(1)),
-               F = list(edges=c(), weights=c())
-) # missing weight
-graph18 = list(list(edges=c(2L,3L,4L,5L), weights=c(14,5,43,33)),
-               list(edges=c(1L,3L,4L,5L), weights=c(14,23,13,22)),
-               list(edges=c(1L,2L), weights=c(5,23)),
-               list(edges=c(1L,2L,5L), weights=c(43,13,11)),
-               list(edges=c(1L,2L,4L), weights=c(33,22,11))
-)
-graphX = list(A = list(edges=c(2L), weights=c(1)),
-              B = list(edges=c(3L), weights=c(1)),
-              C = list(edges=c(5L), weights=c(1)),
-              D = list(edges=c(2L,7L), weights=c(1,1)),
-              E = list(edges=c(4L,6L), weights=c(1,1)),
-              F = list(edges=c(), weights=c()),
-              X = list(edges=c(), weights=c())
-) # two null vertices, both connected
 
 
 # randomGraph()
