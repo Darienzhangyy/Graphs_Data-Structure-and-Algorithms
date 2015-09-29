@@ -84,17 +84,19 @@ randomGraph = function(length, maxWeight=10, seed=NULL, undirected=F, adjacency=
 # Description - Constructs adjacency matrix from graph object, with vertices as dimnames.
 
 adjacencyMatrix = function(g) {
-  a = matrix(0, nrow=length(g), ncol=length(g))
-  adjDF = as.data.frame(a)
-  rownames(adjDF) = colnames(adjDF) = names(g)
-  childNodes = lapply(g, function(x) { names(g)[x$edges] } )
-  edgeWeights = lapply(g, function(x) { x$weights } )
-  for(i in seq(length(g))) {
-    a[i, match(unlist(childNodes[i]), colnames(adjDF))] = unlist(edgeWeights[match(names(g)[i], colnames(adjDF))])
+  rowAssign = function(vertex) { 
+    row = (seq(length(g)) %in% unlist(vertex$edges))
+    row[unlist(vertex$edges)] = unlist(vertex$weights)
+    if(is.logical(row)) {
+      row = rep(0, length(g))
+    }
+    return(row)
   }
-  dimnames(a) = list(names(g), names(g))
+  a = do.call(rbind, lapply(g, rowAssign))
+  colnames(a) = rownames(a)
   return(a)
 }
+
 
 # listGraph()
 ######################################################################################################
