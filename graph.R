@@ -366,9 +366,9 @@ is_valid = function(g) {
 is_undirected<- function(g){ 
         #check if the graph is valid; if it's not return false
  if (invisible(is_valid(g))==F) {
-   stop ("error"); break} else { 
+   stop ("error")} 
  if (length(g)<=1) {
-   return(TRUE); break} else {
+   return(TRUE)} else {
 #create a matrix of 0's with nrow=ncol=length(g)         
    m0<-matrix(0, nrow=length(g), ncol =length(g))   
 #give initial value n=0 
@@ -389,7 +389,7 @@ if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {n=n+1
 if (n>0 & (isSymmetric(m0))){
 return (TRUE); break} else{
 return (FALSE)}}}
-}
+
 
 # is_isomorphic
 ######################################################################################################
@@ -575,7 +575,4 @@ shortest_path = function(g, v1, v2) {
   }
   return(bestPath)
 }
-
-
-
 
