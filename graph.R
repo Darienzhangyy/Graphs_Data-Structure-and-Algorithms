@@ -387,7 +387,7 @@ if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0  ) {n=n+1
 }}}}
 #if n>0 and m0 is symetric that means vertex i and vertex j are undirected 
 if (n>0 & (isSymmetric(m0))){
-return (TRUE); break} else{
+return (TRUE)} else{
 return (FALSE)}}}
 
 
