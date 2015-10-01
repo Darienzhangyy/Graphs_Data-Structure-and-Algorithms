@@ -364,44 +364,15 @@ is_valid = function(g) {
 # 
 # Description - Check if the graph object is undirected, this is true if all directed edges have a 
 #               complementary directed edge with the same weight in the opposite direction.
+#
+# Idea - Create an adjacency matrix and check if it's symmetric.
 
-is_undirected<- function(g){ 
-#check if the graph is valid; if it's not return false
- if (invisible(is_valid(g))==F) {
-   stop ("error")
-} 
- if (length(g)<=1) {
-   return(TRUE)
-} else {
-#create a matrix of 0's with nrow=ncol=length(g)         
-   m0<-matrix(0, nrow=length(g), ncol =length(g))   
-#give initial value n=0 
-   n<-0
- for (j in 1:length(g)) {
- for (i in 1:length(g)) {
-#store each entry of m0[i,j] with a weight that correponds to its edge for each vertex
-#vertex i is transformed to m[i,]
-#if vertex i directly connects to vertex j(j is a edge value), store its corresponding weight value into m0[i,j]
-   m0[i,g[[i]]$edges]<-g[[i]]$weights    
-#if i and j have the same weight and i and j are not equal and they're not zero's
-#record n=n+1
-   if (m0[i,j]==m0[j,i]& i!=j & m0[i,j]!=0) {
-       n=n+1
-       } else { if (length(g)==2){ 
-       n=n+1
-       } else {
-       n=n
-       }
-     }
-   }
- }
-#if n>0 and m0 is symetric that means vertex i and vertex j are undirected 
-if (n>0 & (isSymmetric(m0))){
-    return (TRUE)
-  } else{
-return (FALSE)
+is_undirected = function(g) {
+  if(!suppressWarnings(is_valid(g))) { 
+    return(stop('Invalid graph.', call.=F)) 
   }
- }
+  a = adjacencyMatrix(g)
+  return(ifelse(identical(a, t(a)), T, F))
 }
 
 
