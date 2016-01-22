@@ -1,6 +1,6 @@
 [![wercker status](https://app.wercker.com/status/3c63a22240cddc9211c6e4a8d771f374/m "wercker status")](https://app.wercker.com/project/bykey/3c63a22240cddc9211c6e4a8d771f374)
 
-# http://www2.stat.duke.edu/~cr173/Sta523_Fa15/hw/hw1.html
+http://www2.stat.duke.edu/~cr173/Sta523_Fa15/hw/hw1.html
 
 Function - is_valid
 Description - Validate the graph object to ensure that it meets all requirements - Check that object is a list of lists. Check if there are names for the primary list that they are all unique. Check that each secondary list contains only edges and weights vectors that are of the appropriate type. Check that there are not any edges to non-existent vertices. Check that all weights are not less than or equal to 0. Check that every edge has a weight.
